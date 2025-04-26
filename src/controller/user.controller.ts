@@ -19,13 +19,14 @@ export class UsersController {
   private readonly jwtService: JwtService,) { }
 
   @Post('register')
-  async register(@Body() userData: any): Promise<void> {
+async register(@Body() userData: any): Promise<void> {
+  try {
     const { email } = userData;
 
     // Check if the email is already registered
     const isEmailRegistered = await this.userService.isEmailRegistered(email);
     if (isEmailRegistered) {
-      throw new BadRequestException('Email already registered'); 
+      throw new BadRequestException('Email already registered');
     }
 
     // Create the user
@@ -36,7 +37,11 @@ export class UsersController {
 
     // Send the verification email
     await this.mailerService.sendVerificationEmail(email, verificationToken);
+  } catch (error) {
+    console.error('Error during registration:', error.message);
+    throw new BadRequestException('Registration failed');
   }
+}
 
   @Get()
   findAll(): string {
