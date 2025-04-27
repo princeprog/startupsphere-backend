@@ -43,6 +43,7 @@ async register(@Body() userData: any): Promise<void> {
   }
 }
 
+
   @Get()
   findAll(): string {
     return 'This action returns all users';
